@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const exhbs = require("express-handlebars");
+
 require("dotenv").config();
 
 const app = express();
@@ -19,8 +21,11 @@ db.once("open", () => {
   console.log("mongodb connected!");
 });
 
+app.engine("hbs", exhbs({ defaultLayout: "main", extname: ".hbs" }));
+app.set("view engine", "hbs");
+
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.render("home");
 });
 
 app.listen(port, () => {
