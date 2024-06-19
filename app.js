@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const exhbs = require("express-handlebars");
+const Todo = require("./models/todo");
 
 require("dotenv").config();
 
@@ -25,7 +26,9 @@ app.engine("hbs", exhbs({ defaultLayout: "main", extname: ".hbs" }));
 app.set("view engine", "hbs");
 
 app.get("/", (req, res) => {
-  res.render("home");
+  Todo.find()
+    .lean()
+    .then((todos) => res.render("home", { todos }));
 });
 
 app.listen(port, () => {
