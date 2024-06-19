@@ -37,19 +37,42 @@ app.get("/todos/new", (req, res) => {
   res.render("new");
 });
 
-app.post("/todos", (req, res) => {
-  const name = req.body.name;
-  Todo.create({ name })
-    .then(() => res.redirect("/"))
-    .catch((err) => console.err(err));
-});
-
 app.get("/todos/:id", (req, res) => {
   const id = req.params.id;
 
   Todo.findById(id)
     .lean()
     .then((todo) => res.render("detail", { todo }));
+});
+
+app.get("/todos/:id/edit", (req, res) => {
+  const id = req.params.id;
+
+  Todo.findById(id)
+    .lean()
+    .then((todo) => res.render("edit", { todo }));
+});
+
+app.post("/todos", (req, res) => {
+  const name = req.body.name;
+  Todo.create({ name })
+    .then(() => res.redirect("/"))
+    .catch((err) => console.log(err));
+});
+
+app.post("/todos/:id/edit", (req, res) => {
+  const id = req.params.id;
+  const name = req.body.name;
+
+  Todo.findById(id)
+    .then((todo) => {
+      todo.name = name;
+      return todo.save();
+    })
+    .then(() => {
+      return res.redirect(`/todos/${id}`);
+    })
+    .catch((err) => console.log(err));
 });
 
 app.listen(port, () => {
