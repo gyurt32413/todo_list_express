@@ -44,6 +44,14 @@ app.post("/todos", (req, res) => {
     .catch((err) => console.err(err));
 });
 
+app.get("/todos/:id", (req, res) => {
+  const id = req.params.id;
+
+  Todo.findById(id)
+    .lean()
+    .then((todo) => res.render("detail", { todo }));
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
