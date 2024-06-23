@@ -75,6 +75,14 @@ app.post("/todos/:id/edit", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+app.post("/todos/:id/delete", (req, res) => {
+  const id = req.params.id;
+  Todo.findById(id)
+    .then((todo) => todo.remove())
+    .then(() => res.redirect("/"))
+    .catch((err) => console.log(err));
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
