@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const exhbs = require("express-handlebars");
 const Todo = require("./models/todo");
 const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
 
 require("dotenv").config();
 
@@ -23,6 +24,7 @@ db.once("open", () => {
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 app.engine("hbs", exhbs({ defaultLayout: "main", extname: ".hbs" }));
 app.set("view engine", "hbs");
@@ -61,7 +63,7 @@ app.post("/todos", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.post("/todos/:id/edit", (req, res) => {
+app.put("/todos/:id", (req, res) => {
   const id = req.params.id;
   const { name, isDone } = req.body;
 
@@ -77,7 +79,7 @@ app.post("/todos/:id/edit", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.post("/todos/:id/delete", (req, res) => {
+app.delete("/todos/:id", (req, res) => {
   const id = req.params.id;
   Todo.findById(id)
     .then((todo) => todo.remove())
